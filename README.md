@@ -1,117 +1,150 @@
 <div align="center">
 
-<img src="docs/icon.svg" width="128" alt="FireCasa">
+<img src="docs/icon.svg" width="128" alt="FireCasa icon">
 
 # FireCasa
 
-### A clean, ad-free home screen for the Amazon Fire TV Stick. No root.
+### A clean home screen for Amazon Fire TV. No root.
 
 Your apps, a photo and the time. Nothing else.
-Plus one command that turns off Amazon's ads, tracking and background bloat.
+Plus an optional clean-up that switches off Amazon's ads, tracking and background junk.
 
-<img src="docs/home.jpg" alt="FireCasa, a minimal custom home screen on an Amazon Fire TV Stick" width="100%">
+<img src="docs/home.jpg" alt="FireCasa home screen on a Fire TV: the time, the date, and rows of streaming apps over a space photo" width="100%">
 
 </div>
 
-| Amazon's home screen | FireCasa |
-| --- | --- |
-| ![Stock Fire TV home screen with a sports betting ad and autoplaying trailers](docs/before.jpg) | ![FireCasa home screen with a glass dock of apps](docs/home.jpg) |
-
-The stock Fire TV home screen above was captured on the stick FireCasa was built on. It had a sportsbook ad in the middle of it.
-
 ## What you get
 
-- **A home screen that's just your apps.** A photo, a clock and a frosted glass dock with white app logos. The focused app lifts a little, like on Apple TV.
-- **A clock you can place.** Top left, top center or top right, in small, medium or big, 12-hour with AM/PM or 24-hour. See [The clock](#the-clock).
-- **The Home button opens FireCasa,** not Amazon's screen. It also opens after a restart.
-- **An app drawer** with everything installed. Hold OK on any app to put it on the dock, move it or take it off.
-- **Wallpapers.** Five public domain NASA photos of Earth at night, or your own photo.
-- **A debloat script** that turns off Amazon's ads, screen tracking, telemetry, shopping, Alexa and Prime Video if you want. Every change is undoable.
-- **Updates itself** from this repo's releases. One OK on the remote, no computer needed.
-- **Small and fast.** A 2 MB app in plain Java with no libraries, made for a stick with 1 GB of RAM.
+- **A home screen that's just your apps.** A photo, a clock and your apps in rows, with Netflix, YouTube and the rest one press away.
+- **A clock you can place.** Top left, top center or top right, in three sizes, with 12-hour AM/PM or 24-hour time. See [The clock](#the-clock).
+- **The Home button opens FireCasa**, not Amazon's home screen, and FireCasa opens again after a restart.
+- **Wallpapers.** Five public domain NASA photos of Earth, or a photo of your own. Unsplash photos rotate in if you add a key.
+- **A clean-up that's undoable.** It switches off ads, screen tracking, telemetry and shopping. Apps are turned off, never deleted, and one button turns everything back on.
+- **Updates from this repo.** FireCasa checks for a new release once a day and offers to install it from its settings.
+- **Small.** About 2 MB, written in plain Java with no libraries.
 
-## Screenshots
+<img src="docs/wallpapers.jpg" alt="Five built-in FireCasa wallpapers from NASA: auroras, city lights and sunrise over Earth, and Earthrise from the Moon" width="100%">
 
-All taken on a Fire TV Stick HD.
+<img src="docs/clock-settings.jpg" alt="FireCasa settings on the TV, with rows for the clock: 12-hour, date, position, and size" width="60%">
 
-| App drawer | Moving an app on the dock |
-| --- | --- |
-| ![FireCasa app drawer listing every installed Fire TV app](docs/drawer.jpg) | ![FireCasa dock menu with Move left, Move right and Remove from Home](docs/menu.jpg) |
+## Set up
 
-The built-in wallpapers, all public domain photos from NASA:
+You need a Fire TV and a computer on the same Wi-Fi. No Terminal is needed for setup.
 
-![Four FireCasa wallpapers: city lights from the ISS, Earthrise from Apollo 17, an aurora over the South Pacific, and sunrise over Earth](docs/wallpapers.jpg)
-
-## Results on a Fire TV Stick HD
-
-Measured on a Fire TV Stick HD (AFTSS), Fire OS 7.7.1.4, which has 900 MB of usable memory.
-
-| | Before | After |
-| --- | --- | --- |
-| Free memory, idle on the home screen | 222 MB | 284 MB, with YouTube playing |
-| Amazon's home screen in memory | 140 MB | 34 MB, sitting in the background |
-| Prime Video in memory, never opened | 192 MB | off |
-| Alexa in memory | 95 MB | off (optional) |
-| Apps Amazon wakes up in the background | Tubi, Fubo, Netflix | none |
-| Ads on the home screen | sports betting, trailers | none |
-
-## Will it work on my Fire TV?
-
-| Device | Fire OS | Works? |
-| --- | --- | --- |
-| Fire TV Stick HD, Lite, 3rd gen, 4K (1st gen), 4K Max (1st gen), Cube | Fire OS 7 | Yes. Tested on Fire TV Stick HD, Fire OS 7.7.1.4, and reported working on 4K Max (1st gen), Fire OS 7.7.1.3, and on an Insignia Fire TV Edition TV, Fire OS 7.7.1.7. |
-| Fire TV Stick 4K (1st gen) and others not yet on Fire OS 7 | Fire OS 6 | Yes, with the differences below. Tested on Fire TV Stick 4K (1st gen), Fire OS 6.7.1.1. |
-| Fire TV Stick 4K (2nd gen), 4K Max (2nd gen), newer Cubes | Fire OS 8 | Should work. Not tested yet, reports welcome. |
-| Fire TV Stick 4K Select and other Vega OS devices | Vega OS | No. Vega OS can't install Android apps. |
-| Android TV, Google TV, Chromecast with Google TV | Android | Yes, as a normal launcher. Pick it as the default home screen. |
-
-Not sure which you have? Settings > My Fire TV > About shows the device and its Fire OS version.
-
-## Set up with the setup page (no Terminal)
-
-1. Turn on ADB debugging on the Fire TV (see the steps in [Install it with Claude Code](#install-it-with-claude-code)) and note its address.
-2. Get the code: on the GitHub page, press **Code > Download ZIP**, and unzip it.
-3. On a Mac, double-click **`setup.command`**. Your browser opens the setup page.
-4. Fill in the boxes and press the buttons:
-   - **Fire TV address**, which it remembers.
-   - **Platform tools** (adb), the one thing your computer needs. The page links to the free download.
-   - **Keys** for movie and show info. They're optional, and each has a link to get one for free.
-   - **Clean up**, with a "Show what would change" preview first. Pick extras like Alexa or casting if you want them off.
+1. **Turn on ADB debugging on the Fire TV.** Go to Settings > My Fire TV > About, highlight the device name and press OK seven times. Back out, open Developer Options and turn on **ADB debugging**. Note the TV's address under Settings > My Fire TV > About > Network.
+2. **Get FireCasa.** On this repo's page, press **Code > Download ZIP** and unzip it. (Or `git clone` it.)
+3. **Open the setup page.** On a Mac, double-click **`setup.command`**. Your browser opens it. On Windows or Linux, run `python3 setup/server.py` (or `python` if that's how Python is named) and open the address it shows. Only macOS has been tested so far.
+4. **Fill in the boxes and press the buttons:**
+   - **Fire TV address.** FireCasa remembers it.
+   - **Platform tools (adb).** The one thing your computer needs. The page links to the free download.
+   - **Keys** for movie and show info. Optional. Each has a link to get one free.
+   - **Clean up.** Preview what would change first, and pick any extras you want off.
    - **Install FireCasa.** It downloads the ready-made app, so you don't need Java or the Android SDK. Look at the TV and choose **Always allow** if it asks.
-   - **Undo** and **Remove FireCasa**, if you change your mind.
 
-The page only talks to this computer. Your keys stay in `setup/keys` on your computer, and `firecasa.sh` sends them to the TV, where the app keeps its own copy. The app itself never includes your keys, so the ready-made app is safe to share.
+The setup page only talks to your computer and your TV. Your keys stay in `setup/keys` on your computer. They're sent to the TV, where the app keeps its own copy. The app itself never includes your keys, so the ready-made app is safe to share.
 
-On the TV, the app keeps its copy in its private storage, where other apps can't read it. During install the copies sit for a moment in a shared folder (`/data/local/tmp`), which anything on the TV can read, and they're removed right after. Turn ADB debugging off when you're done.
+Building your own copy? If you have Java 17 and the Android SDK, the setup page builds the app instead of downloading it. See [Build it yourself](#build-it-yourself).
 
-Building your own copy? If you have Java 17 and the Android SDK, the page builds the app instead of downloading it.
+## Compatibility
 
-## Install it with Claude Code
+| Device | Fire OS | Status |
+| --- | --- | --- |
+| Fire TV, model AFTKRT | Fire OS 8.1.8.5 | Tested: install, home screen and clock settings. The clean-up preview works. A full clean-up and undo are not yet tested on this model. |
+| Other Fire TV devices on Fire OS 7 or 8 | | Untested. Reports are welcome. |
+| Fire TV on Fire OS 6 | | Code path included, not yet tested. See [On Fire OS 6](#on-fire-os-6). |
+| Fire TV Stick 4K Select and other Vega OS devices | Vega OS | Not expected to work. Vega OS doesn't run Android apps, so FireCasa can't install there. Untested. |
+| Android TV and Google TV | | Untested as a normal launcher. Pick FireCasa as the default home screen. |
 
-The easy way. [Claude Code](https://claude.com/claude-code) does the setup, and you press OK on the remote when the TV asks.
+Not sure which Fire OS you have? Settings > My Fire TV > About shows it.
 
-**1. Turn on developer mode on the Fire TV.**
-Settings > My Fire TV > About. Highlight the device name and press OK 7 times. Go back, open Developer Options and turn on **ADB debugging**. Your Fire TV's IP address is under Settings > My Fire TV > About > Network.
+## The clock
 
-**2. Open Claude Code on a computer on the same Wi-Fi.** Then paste this:
+Open FireCasa settings from the top-right menu on the home screen. These rows change the clock:
 
-```text
-Install FireCasa on my Fire TV: https://github.com/chancechime/FireCasa
-My Fire TV's IP address is <ip address>. It's a <model, from Settings > My Fire TV > About>.
+| Row | Options |
+| --- | --- |
+| Clock | 12-hour (with AM/PM) or 24-hour |
+| Date under the clock | On or Off |
+| Clock position | Top left, Top center, Top right |
+| Clock size | Small, Medium, Big |
 
-1. Clone the repo. Read README.md, firecasa.sh and debloat.txt before running anything.
-2. Install what's missing to build it (Java 17, Android SDK, adb), as build.sh describes.
-3. Run ./firecasa.sh install <ip>. Tell me when to accept the debugging prompt on the TV.
-4. Run ./firecasa.sh debloat <ip> --dry-run and explain each group in debloat.txt in plain
-   words. Ask me which groups I want before turning anything off.
-5. Run ./firecasa.sh debloat with the groups I chose, then restart the TV and show me
-   free memory before and after.
-6. Check that pressing Home opens FireCasa, and tell me how to undo everything.
+The photo credit for Unsplash photos sits under the date, and it moves with the clock.
+
+## API keys
+
+FireCasa uses three free services for the extra rows and photos. Each key is optional. Without one, its part of the home screen just doesn't show.
+
+| Key | Used for | Where to get it |
+| --- | --- | --- |
+| TMDB read access token | movie and show rows, details | [themoviedb.org/settings/api](https://www.themoviedb.org/settings/api) |
+| OMDb key | IMDb and Rotten Tomatoes scores | [omdbapi.com/apikey.aspx](https://www.omdbapi.com/apikey.aspx) |
+| Unsplash access key | rotating background photos | [unsplash.com/developers](https://unsplash.com/developers) |
+
+Put them in on the setup page, then press **Send keys to TV**. From the command line, put the three files in `setup/keys` (`tmdb_token.txt`, `omdb_key.txt`, `unsplash_key.txt`) and run:
+
+```sh
+./firecasa.sh keys 192.168.1.50
 ```
 
-## Install it by hand
+`install` sends them too. An empty or missing file turns that key off.
 
-You need `adb` and, to build it yourself, Java 17 and the Android SDK. On a Mac:
+## Clean up Amazon's extras
+
+The clean-up turns off Amazon's ads, tracking, telemetry and shopping. These are always included. Anything else is your choice:
+
+| Group | What turns off | What you lose |
+| --- | --- | --- |
+| always | ads, automatic content recognition, recommendations, shopping, News, telemetry, demo mode, tutorials, release notes, help videos, Mayday screen sharing, Amazon Kids, Luna, Wi-Fi password sync, screensaver apps with proxy SDKs, Alexa's Spotify bridge (the Spotify app still works) | nothing you'd use |
+| `alexa` | Alexa and its media, calling and multi-room audio | voice search on the mic button |
+| `primevideo` | Prime Video | Prime Video |
+| `livetv` | Amazon's Live TV guide, which wakes channel apps like Tubi and Fubo in the background to fill a Live tab | the Live tab, which FireCasa doesn't have. The channel apps still work when you open them. |
+| `amazonapps` | Amazon Music, Amazon Photos, Silk Browser | those apps |
+| `casting` | screen mirroring from phones and PCs, and Amazon's cast receiver | mirroring. Casting from Netflix and YouTube keeps working. |
+| `updates` | Amazon's automatic system updates, including forced updates | security fixes from Amazon, until you turn the group back on. Check for updates by hand in Settings. |
+
+Apps are disabled, not deleted. [debloat.txt](debloat.txt) lists every package with a note on what it is. Fire OS protects a few packages, like crash reporting and the main metrics service. The script reports those as refused and moves on. Restart the TV afterwards to free the memory.
+
+## Undo
+
+Use **Turn Amazon back on** on the setup page. That turns every app back on and gives the Home button back to Amazon. **Remove FireCasa too** does the same and uninstalls FireCasa.
+
+The list of what was turned off is saved on the TV as well as on your computer, so undo works from any computer. When you're done, turn ADB debugging off in Developer Options.
+
+## Remote
+
+| Button | Does |
+| --- | --- |
+| Left, Right | move along a row |
+| Up | reach the picture, apps and settings buttons |
+| OK | open an app |
+| Hold OK, or press Menu | put an app on the home screen, move it or take it off |
+| Back | close a menu or the app drawer |
+
+## How the Home button works
+
+Fire OS doesn't let apps replace the home screen, and it won't disable Amazon's launcher without root. FireCasa works around that with an accessibility service. It keeps a ready copy of its home screen in an overlay window and shows it as soon as Home is pressed, so Amazon's launcher is covered as it opens. When the overlay steps aside, the screen you see is FireCasa.
+
+This is a reaction, not a block. On a slow frame you might see a flicker of Amazon's launcher. Removing Amazon's launcher completely needs root, which FireCasa doesn't use.
+
+Amazon's launcher still runs in the background. To open it, pick **Amazon home screen** in the top-right menu.
+
+### On Fire OS 6
+
+Fire OS 6 doesn't start third-party accessibility services, so FireCasa watches the system log instead. `firecasa.sh install` grants it the permissions it needs for that. It covers Amazon's launcher the same way.
+
+Two differences:
+- An app picked in the first five seconds after Home opens once those seconds are up. Pressing Amazon's tiles needs the accessibility service.
+- On some remotes, Home goes to the TV and never reaches the stick. Back returns you to FireCasa from Amazon's home screen. This is from the code and has not been tested on a Fire OS 6 TV.
+
+## Updating
+
+FireCasa checks this repo for a newer release once a day. When one exists, its settings show **Update to FireCasa x.y.z**. Pick it, then choose **Install** when the TV asks. Your dock, wallpaper and Home button settings carry over.
+
+Fire OS asks you to confirm each install from outside Amazon's Appstore, so an update can't be fully silent.
+
+## Build it yourself
+
+You need Java 17 and the Android SDK (platform 34, build-tools 34.0.0), plus platform tools (`adb`). On a Mac:
 
 ```sh
 brew install --cask android-platform-tools android-commandlinetools
@@ -122,158 +155,67 @@ sdkmanager "platforms;android-34" "build-tools;34.0.0"
 Then:
 
 ```sh
-git clone https://github.com/chancechime/FireCasa.git FireCasa
-cd FireCasa
-./firecasa.sh install 192.168.1.50        # your Fire TV's IP address
+./build.sh                                   # builds out/firecasa.apk
+./firecasa.sh install 192.168.1.50           # your Fire TV's address
 ```
 
-The first time, the TV asks to allow debugging from your computer. Pick "Always allow" and press OK.
+The first install asks you to allow debugging on the TV. Choose "Always allow" and press OK.
 
-Prefer not to build? Download the APK from [Releases](https://github.com/chancechime/FireCasa/releases/latest), copy it to `out/firecasa.apk` in your clone, and run `./firecasa.sh install <ip>`. The script installs it and turns on the Home button service.
+Building needs no keys. Keys are sent to the TV separately.
 
-## Debloat
+## Command line
 
-```sh
-./firecasa.sh debloat 192.168.1.50 --dry-run          # see what would change
-./firecasa.sh debloat 192.168.1.50                    # ads, tracking and junk
-./firecasa.sh debloat 192.168.1.50 --also alexa,primevideo,livetv
-./firecasa.sh debloat 192.168.1.50 --all              # every group
-```
-
-Apps are disabled, not deleted. [debloat.txt](debloat.txt) lists every package with a note on what it is.
-
-| Group | What turns off | What you lose |
-| --- | --- | --- |
-| `safe` (always) | ads, automatic content recognition, recommendations, shopping, News, telemetry, demo mode, tutorials, Amazon Kids, Luna, Wi-Fi password sync, coral reef and jellyfish screensaver apps that ship a proxy SDK | nothing you'd use |
-| `alexa` | Alexa and its media, calling and multi-room audio services | voice search on the mic button |
-| `primevideo` | Prime Video | Prime Video |
-| `livetv` | Amazon's Live TV guide | the guide. Channel apps like Tubi and Fubo still work on their own. |
-| `amazonapps` | Amazon Music, Amazon Photos, Silk Browser | those apps |
-| `casting` | Fire TV's screen mirroring and Amazon's cast receiver | mirroring a phone or PC. Casting from the Netflix and YouTube apps keeps working. |
-| `updates` | Amazon's forced updater | forced updates. Regular updates are protected and stay on. |
-
-Fire OS protects some packages, like crash reporting and the main metrics service. The script says "Fire OS refused" for those and moves on. Restart the TV afterwards to free the memory.
-
-## How the Home button works
-
-Fire OS won't let you change the home screen, and it refuses to disable, uninstall, hide or suspend Amazon's launcher without root. I tried all four.
-
-So FireCasa works around it. A small accessibility service keeps a hidden, ready-to-show copy of the home screen in an overlay window. It covers Amazon's launcher the instant that launcher starts to open, before it paints. Two signals trigger it: Amazon's own launcher sends an unguarded `com.amazon.tv.launcher.HOME_PRESSED` broadcast that FireCasa listens for, which lands about half a second sooner than the accessibility window event that acts as the backup. Behind the overlay, FireCasa opens as a normal app, which Fire OS holds back for 5 seconds after Home, and once it has drawn its first frame the overlay steps aside. It's the same screen, so you can't see the handoff.
-
-If you pick an app in those 5 seconds, FireCasa can't start it directly (Fire OS holds it), so it presses that app's tile on Amazon's launcher behind the overlay instead. Amazon's own launches aren't held, so the app opens right away. At boot, FireCasa opens itself as soon as the TV has started.
-
-This reliably keeps Amazon's home screen off the screen in testing, but it's a reaction, not a block: on a slow frame you might catch a flicker. The only way to remove Amazon's launcher outright is root, which this project does not do.
-
-### On Fire OS 6
-
-Fire OS 6 never starts a third-party accessibility service, and keeps Home's broadcasts to Amazon's own apps. So there FireCasa watches the system log instead (`firecasa.sh install` grants it `READ_LOGS` and the overlay permission): Amazon's launcher coming to the front, and the new intent it gets on every Home press. It covers it with the same overlay and opens FireCasa behind it.
-
-Two differences from Fire OS 7:
-- An app picked on the overlay in the 5 seconds after Home opens when those 5 seconds are up, since pressing Amazon's tiles needs the accessibility service.
-- Back on Amazon's home screen brings FireCasa back. Many TV remotes, which reach the stick over HDMI-CEC, keep Home for the TV and never pass it on, so Back is the way out of Amazon's home screen there.
-
-Amazon's launcher still runs in the background, using about 35 MB instead of 140 MB. To get to it, open Settings on FireCasa's top right and pick "Amazon home screen".
-
-## The clock
-
-Open FireCasa's settings at the top right. These rows change the clock:
-
-| Row | Options |
-| --- | --- |
-| Clock | 12-hour (with AM/PM) or 24-hour |
-| Date under the clock | On or Off |
-| Clock position | Top left, Top center, Top right |
-| Clock size | Small, Medium, Big |
-
-The photo credit for the Unsplash wallpapers sits under the date, and it moves with the clock.
-
-## API keys
-
-The keys for movie and show info live in `setup/keys` on your computer. Put them there from the setup page, or copy the three files in by hand (`tmdb_token.txt`, `omdb_key.txt`, `unsplash_key.txt`). Then send them to the TV:
+The setup page runs these for you. They're here if you prefer Terminal.
 
 ```sh
-./firecasa.sh keys 192.168.1.50
-```
-
-`install` sends them too. A file that's empty or missing turns that key off.
-
-## Your own wallpaper
-
-```sh
+./firecasa.sh install  192.168.1.50                      # install, take over the Home button, open it
+./firecasa.sh keys     192.168.1.50                      # send the keys in setup/keys
+./firecasa.sh debloat  192.168.1.50 --dry-run            # show what would change
+./firecasa.sh debloat  192.168.1.50                      # turn off the always-on group
+./firecasa.sh debloat  192.168.1.50 --also alexa,casting # and these extras
+./firecasa.sh debloat  192.168.1.50 --all                # every group
 ./firecasa.sh wallpaper 192.168.1.50 ~/Pictures/beach.jpg
+./firecasa.sh memory   192.168.1.50                      # free memory now
+./firecasa.sh undo     192.168.1.50                      # turn everything back on
+./firecasa.sh undo     192.168.1.50 --uninstall          # and remove FireCasa
 ```
 
-The photo is resized to 1080p and becomes the wallpaper. The picture button on FireCasa cycles through it and the built-in ones.
-
-## Updating
-
-FireCasa checks this repo for a new release once a day. When there is one, it tells you on the home screen, and **Update to FireCasa x.y.z** shows up in Settings at the top right. Pick it, then choose Install when the TV asks. Amazon's home screen shows for a couple of seconds while Android swaps the app, then FireCasa comes back on its own with your dock, wallpaper and Home button as they were.
-
-Fire OS asks for that one OK on every app install outside Amazon's Appstore, so updates can't be fully silent without root.
-
-On FireCasa 1.0.0 or 1.0.1, which came before the updater, update by hand once:
-
-```sh
-git pull
-./firecasa.sh install 192.168.1.50
-```
-
-## Undo
-
-```sh
-./firecasa.sh undo 192.168.1.50               # turn every app back on, give Home back to Amazon
-./firecasa.sh undo 192.168.1.50 --uninstall   # and remove FireCasa
-```
-
-The list of what was turned off is saved on the TV as well as in this folder, so undo works from any computer. When you're done, turn ADB debugging off in Developer Options.
-
-## Using it
-
-| Remote | Does |
-| --- | --- |
-| Left, Right | move along the dock |
-| Up | reach the wallpaper, apps and settings buttons |
-| OK | open an app |
-| Hold OK, or press Menu (☰) | move an app, take it off the dock, or add one from the app drawer |
-| Back | close a menu or the app drawer |
+Your own wallpaper is resized to 1080p. The picture button on the home screen cycles through it and the built-in ones.
 
 ## FAQ
 
-**Can I change the Fire TV launcher without root?**
-Not officially. Since 2023 Fire OS ignores the default home setting and blocks disabling Amazon's launcher. FireCasa gets the same result with an accessibility overlay, explained above.
-
-**How do I remove ads from the Fire TV home screen?**
-Replace the home screen. Ads live in Amazon's launcher, so with FireCasa in front you don't see them. `./firecasa.sh debloat` also turns off the ad services themselves.
-
-**Why is my Fire TV Stick so slow?**
-Memory. A Fire TV Stick HD has under 1 GB, and out of the box Amazon keeps Prime Video, Alexa, a recommendation service and a content tracker loaded, and wakes streaming apps in the background for the Live tab. On the test stick that took free memory down to about 220 MB.
+**Can I change the Fire TV home screen without root?**
+Not with Amazon's own settings. FireCasa gets the same result with an overlay that covers Amazon's launcher, as described above.
 
 **Is it safe?**
-It only disables apps, never deletes them, and it never touches the launcher, Settings, the remote, Bluetooth, the Appstore or sign-in. Everything is undoable. It's still your device and your call. If something goes wrong and `undo` can't reach the TV, a factory reset (hold Back and Right on the remote for 10 seconds) puts it back to stock.
+It only turns apps off. It never deletes them, and it never touches the launcher, Settings, the remote, Bluetooth, the Appstore or sign-in. Everything can be undone from the setup page. If undo can't reach the TV, a factory reset puts it back to stock.
+
+**Will an Amazon update break it?**
+It could. If Home stops opening FireCasa after an update, run install again from the setup page.
 
 **Does voice search still work?**
 Yes, unless you turn off the `alexa` group.
 
-**Will an Amazon update break it?**
-It could. If Home stops opening FireCasa after an update, run `./firecasa.sh install` again. Open an issue with your Fire OS version if that doesn't fix it.
+## Repository
 
-## Inside
-
-| File | What it is |
+| Path | What it is |
 | --- | --- |
-| `app/src/.../HomeScreen.java` | the whole home screen, one view in plain Java |
-| `app/src/.../HomeService.java` | the Home button: overlay plus redirect |
-| `app/src/.../MainActivity.java` | FireCasa as an app, and the boot receiver |
-| `app/src/.../Updater.java` | checks GitHub releases and installs updates |
-| `build.sh` | builds the APK with the SDK's own tools, no Gradle, in about ten seconds |
-| `firecasa.sh` | install, debloat, wallpaper, memory and undo |
-| `setup.command` | double-click on a Mac to open the setup page |
+| `app/src/com/firecasa/home/HomeScreen.java` | the home screen, one view in plain Java |
+| `app/src/com/firecasa/home/HomeService.java` | the Home button: overlay and redirect |
+| `app/src/com/firecasa/home/HomeWatcher.java` | the Home button on Fire OS 6, from the system log |
+| `app/src/com/firecasa/home/MainActivity.java` | FireCasa as an app, and the boot receiver |
+| `app/src/com/firecasa/home/Updater.java` | checks GitHub releases and installs updates |
 | `setup/` | the setup page (`index.html`) and its local server (`server.py`, standard library only) |
-| `debloat.txt` | every package the debloat can turn off, with notes |
+| `setup.command` | double-click on a Mac to open the setup page |
+| `build.sh` | builds the APK with the SDK's own tools, no Gradle |
+| `firecasa.sh` | install, keys, clean-up, wallpaper, memory and undo |
+| `debloat.txt` | every package the clean-up can turn off, with notes |
 
 ## Credits
 
-FireCasa started as [FireFrame](https://github.com/dyascj/FireFrame) by [@dyascj](https://github.com/dyascj) (CJ Dyas), and its code still builds on that work. FireCasa also borrows ideas from two other projects. [CleanFrame](https://github.com/nthnclrk/CleanFrame) by @nthnclrk did the look, a photo with a glass dock, for Samsung's The Frame. [TV Detox](https://github.com/Ansub/tv-detox) by @Ansub did an agent-run cleanup for Android TV, and FireCasa's build script follows its approach.
+FireCasa started as [FireFrame](https://github.com/dyascj/FireFrame) by [@dyascj](https://github.com/dyascj) (CJ Dyas), and its code still builds on that work. Thank you.
+
+FireCasa also borrows ideas from two other projects. [CleanFrame](https://github.com/nthnclrk/CleanFrame) by [@nthnclrk](https://github.com/nthnclrk) inspired the look: a photo, the time and a glass dock. [TV Detox](https://github.com/Ansub/tv-detox) by [@Ansub](https://github.com/Ansub) (MIT) inspired the build script and the agent-guided clean-up.
 
 Fonts, icons, logos and photos keep their own licenses, listed in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). App logos are trademarks of their owners. FireCasa isn't affiliated with Amazon or any streaming service.
 
