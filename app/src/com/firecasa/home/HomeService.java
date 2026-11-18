@@ -1,4 +1,4 @@
-package com.fireframe.home;
+package com.firecasa.home;
 
 import android.accessibilityservice.AccessibilityService;
 import android.content.BroadcastReceiver;
@@ -15,11 +15,11 @@ import android.view.accessibility.AccessibilityWindowInfo;
 
 // Fire TV won't let another app be the home screen, and Amazon's launcher can't be turned off.
 // So this service keeps Amazon's home screen out of sight:
-//  1. As soon as Amazon's launcher opens (Home, or leaving an app) it shows FireFrame as an overlay
+//  1. As soon as Amazon's launcher opens (Home, or leaving an app) it shows FireCasa as an overlay
 //     window. Overlays aren't held back the way app launches are.
-//  2. It opens the FireFrame app too, which Fire OS holds back for 5 seconds after Home. When the app
+//  2. It opens the FireCasa app too, which Fire OS holds back for 5 seconds after Home. When the app
 //     has drawn, the overlay steps aside. Same screen, so the swap can't be seen.
-//  3. An app picked on the overlay in those 5 seconds would be held back too. So FireFrame presses
+//  3. An app picked on the overlay in those 5 seconds would be held back too. So FireCasa presses
 //     that app's tile on Amazon's launcher, hidden behind the overlay: Amazon's launches aren't held.
 public class HomeService extends AccessibilityService {
     static final String AMAZON_HOME = "com.amazon.tv.launcher";
@@ -32,7 +32,7 @@ public class HomeService extends AccessibilityService {
     static final java.util.Set<String> IGNORED = new java.util.HashSet<>(java.util.Arrays.asList(
             "android", "com.android.systemui", "com.amazon.tv.ime"));
 
-    // "Amazon home screen" and "Fire TV settings" in FireFrame's settings menu pause all this until
+    // "Amazon home screen" and "Fire TV settings" in FireCasa's settings menu pause all this until
     // Home is pressed or another app opens. Settings can pass through Amazon's launcher, so it doesn't count.
     // Leaving settings for Amazon's home screen ends the pause too.
     static long pausedUntil, ignoreHomeUntil;
@@ -49,7 +49,7 @@ public class HomeService extends AccessibilityService {
     // launcher's window has drawn, so we cover sooner than the accessibility event alone would let us.
     final BroadcastReceiver homePressed = new BroadcastReceiver() {
         @Override public void onReceive(Context c, Intent i) {
-            // The launcher sends it when FireFrame opens Amazon's home screen, too: that isn't Home.
+            // The launcher sends it when FireCasa opens Amazon's home screen, too: that isn't Home.
             if (SystemClock.elapsedRealtime() < ignoreHomeUntil) return;
             pausedUntil = 0;
             cover();
@@ -78,7 +78,7 @@ public class HomeService extends AccessibilityService {
         return SystemClock.elapsedRealtime() < pausedUntil;
     }
 
-    // The FireFrame app is in front and drawn: the overlay can go, unless a menu is open on it.
+    // The FireCasa app is in front and drawn: the overlay can go, unless a menu is open on it.
     static void appShown() {
         HomeWatcher.appShown();
         HomeService s = running;
@@ -157,7 +157,7 @@ public class HomeService extends AccessibilityService {
         }
     }
 
-    // Amazon's home screen opened. Cover it and bring up the FireFrame app.
+    // Amazon's home screen opened. Cover it and bring up the FireCasa app.
     void cover() {
         if (paused()) return;
         show();
@@ -184,6 +184,7 @@ public class HomeService extends AccessibilityService {
         showing = false;
         hideWhenMenusClose = false;
         overlay.setVisibility(View.GONE);
+        overlay.drift(false);
         setFocusable(false);
     }
 
@@ -195,7 +196,7 @@ public class HomeService extends AccessibilityService {
     }
 
     // Opens an app by pressing its tile on Amazon's launcher, behind the overlay. Amazon's launcher can
-    // start apps right away; FireFrame can't for 5 seconds after Home. Amazon's window can take a
+    // start apps right away; FireCasa can't for 5 seconds after Home. Amazon's window can take a
     // moment to show up, so this tries for about a second before falling back to a normal launch.
     void launchThroughAmazon(final String label, final Runnable otherwise, final int attempt) {
         if (pressAmazonTile(label)) return;

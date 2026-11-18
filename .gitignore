@@ -2,3 +2,10 @@ out/
 key.jks
 disabled.txt
 .DS_Store
+app/assets/tmdb_token.txt
+app/assets/unsplash_key.txt
+app/assets/omdb_key.txt
+.claude/
+skills-lock.json
+setup/local.json
+setup/keys/

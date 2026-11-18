@@ -1,4 +1,4 @@
-package com.fireframe.home;
+package com.firecasa.home;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -7,7 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.ViewTreeObserver;
 
-// FireFrame as an app: the Home screen in a window of its own. See HomeScreen for everything else.
+// FireCasa as an app: the Home screen in a window of its own. See HomeScreen for everything else.
 public class MainActivity extends Activity {
     HomeScreen screen;
 
@@ -42,7 +42,7 @@ public class MainActivity extends Activity {
         });
     }
 
-    // Fire TV starts on Amazon's home screen; this opens FireFrame as soon as the TV has booted, or FireFrame has updated.
+    // Fire TV starts on Amazon's home screen; this opens FireCasa as soon as the TV has booted, or FireCasa has updated.
     public static class Boot extends BroadcastReceiver {
         @Override
         public void onReceive(Context c, Intent i) {

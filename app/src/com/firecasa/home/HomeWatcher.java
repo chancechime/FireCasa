@@ -1,4 +1,4 @@
-package com.fireframe.home;
+package com.firecasa.home;
 
 import android.app.Notification;
 import android.app.Service;
@@ -26,9 +26,9 @@ import java.util.Locale;
 // HomeService for Fire OS 6. Fire OS 6 (Android 7.1) never starts third-party accessibility services,
 // so HomeService doesn't run there. This does the same job without one:
 //  - It learns that Amazon's home screen opened from the system's event log (READ_LOGS, granted by
-//    fireframe.sh install), and sooner from the Home key broadcasts.
+//    firecasa.sh install), and sooner from the Home key broadcasts.
 //  - It covers Amazon's home screen with a system overlay (SYSTEM_ALERT_WINDOW, allowed by
-//    fireframe.sh install) and opens the FireFrame app behind it, as HomeService does.
+//    firecasa.sh install) and opens the FireCasa app behind it, as HomeService does.
 // Without an accessibility service it can't press Amazon's tiles, so an app picked on the overlay in
 // the 5 seconds after Home opens when those 5 seconds are up.
 public class HomeWatcher extends Service {
@@ -45,7 +45,7 @@ public class HomeWatcher extends Service {
     final Runnable hideNow = this::hide;
 
     // Only where HomeService can't run (newer Fire OS versions keep using HomeService), and only while
-    // fireframe.sh install has turned it on: undo takes READ_LOGS back, the way it turns HomeService off.
+    // firecasa.sh install has turned it on: undo takes READ_LOGS back, the way it turns HomeService off.
     static boolean wanted(Context c) {
         return Build.VERSION.SDK_INT < 26 && canReadLogs(c);
     }
@@ -71,7 +71,7 @@ public class HomeWatcher extends Service {
     };
 
     void homePressed() {
-        // FireFrame's own "Amazon home screen" opens it the way Home does: that isn't Home.
+        // FireCasa's own "Amazon home screen" opens it the way Home does: that isn't Home.
         if (SystemClock.elapsedRealtime() < HomeService.ignoreHomeUntil) return;
         HomeService.pausedUntil = 0;
         cover();
@@ -84,8 +84,8 @@ public class HomeWatcher extends Service {
         // Keeps the watcher alive when memory is short, which on a Fire TV Stick it usually is.
         startForeground(1, new Notification.Builder(this)
                 .setSmallIcon(getApplicationInfo().icon)
-                .setContentTitle("FireFrame")
-                .setContentText("Keeps the Home button on FireFrame")
+                .setContentTitle("FireCasa")
+                .setContentText("Keeps the Home button on FireCasa")
                 .setPriority(Notification.PRIORITY_MIN)
                 .build());
         wm = (WindowManager) getSystemService(WINDOW_SERVICE);
@@ -102,8 +102,8 @@ public class HomeWatcher extends Service {
         f.addAction("com.amazon.tv.launcher.HOME_PRESSED");
         f.addAction("amazon.intent.action.HOME_PRESSED");
         registerReceiver(homePressed, f);
-        new Thread(this::readEvents, "FireFrame events").start();
-        new Thread(this::readKeys, "FireFrame keys").start();
+        new Thread(this::readEvents, "FireCasa events").start();
+        new Thread(this::readKeys, "FireCasa keys").start();
     }
 
     @Override
@@ -158,7 +158,7 @@ public class HomeWatcher extends Service {
     }
 
     // Many TV remotes, talking to the stick over HDMI-CEC, have no Home button that reaches it: the TV
-    // keeps Home for itself. So Back on Amazon's home screen brings FireFrame back too. Amazon's device
+    // keeps Home for itself. So Back on Amazon's home screen brings FireCasa back too. Amazon's device
     // control service logs every key from either remote, e.g. "I/OZ-DCS:KeyPressReceiver( 1413): Received
     // keyCode: KEYCODE_BACK". Its tag has a colon, which logcat's tag filter can't take: match the message.
     void readKeys() {
@@ -198,7 +198,7 @@ public class HomeWatcher extends Service {
         return component.startsWith(HomeService.AMAZON_HOME + "/") && component.contains("HomeActivity");
     }
 
-    // Back while Amazon's home screen is in front, e.g. after "Amazon home screen": back to FireFrame.
+    // Back while Amazon's home screen is in front, e.g. after "Amazon home screen": back to FireCasa.
     void backPressed() {
         if (front == null || !isAmazonHome(front)) return;
         HomeService.pausedUntil = 0;
@@ -261,6 +261,7 @@ public class HomeWatcher extends Service {
         showing = false;
         hideWhenMenusClose = false;
         overlay.setVisibility(View.GONE);
+        overlay.drift(false);
         setFocusable(false);
     }
 

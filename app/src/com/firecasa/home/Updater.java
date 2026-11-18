@@ -1,4 +1,4 @@
-package com.fireframe.home;
+package com.firecasa.home;
 
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -20,15 +20,15 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-// Updates FireFrame from its GitHub releases. Once a day it looks for a newer release; "Update" in the
+// Updates FireCasa from its GitHub releases. Once a day it looks for a newer release; "Update" in the
 // settings menu downloads its APK and hands it to Android's installer, which asks for one OK on the TV.
 // Releases are signed with the same key, so the update installs over the top and keeps everything.
 public class Updater extends BroadcastReceiver {
-    static final String LATEST = "https://api.github.com/repos/dyascj/FireFrame/releases/latest";
+    static final String LATEST = "https://api.github.com/repos/chancechime/FireCasa/releases/latest";
     static final long DAY = 24 * 60 * 60 * 1000L;
 
     static SharedPreferences prefs(Context c) {
-        return c.getSharedPreferences("fireframe", Context.MODE_PRIVATE);
+        return c.getSharedPreferences("firecasa", Context.MODE_PRIVATE);
     }
 
     // At most once a day, in the background. Runs found on the main thread if there's a newer release.
@@ -75,7 +75,7 @@ public class Updater extends BroadcastReceiver {
             try {
                 id = pi.createSession(new PackageInstaller.SessionParams(PackageInstaller.SessionParams.MODE_FULL_INSTALL));
                 PackageInstaller.Session s = pi.openSession(id);
-                try (InputStream in = open(url); OutputStream out = s.openWrite("fireframe.apk", 0, -1)) {
+                try (InputStream in = open(url); OutputStream out = s.openWrite("firecasa.apk", 0, -1)) {
                     byte[] buf = new byte[64 * 1024];
                     for (int n; (n = in.read(buf)) > 0; ) out.write(buf, 0, n);
                     s.fsync(out);
@@ -99,7 +99,7 @@ public class Updater extends BroadcastReceiver {
             Intent confirm = i.getParcelableExtra(Intent.EXTRA_INTENT);
             if (confirm != null) c.startActivity(confirm.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
         } else if (status != PackageInstaller.STATUS_SUCCESS && status != PackageInstaller.STATUS_FAILURE_ABORTED) {
-            Toast.makeText(c, "FireFrame couldn't update: " + i.getStringExtra(PackageInstaller.EXTRA_STATUS_MESSAGE),
+            Toast.makeText(c, "FireCasa couldn't update: " + i.getStringExtra(PackageInstaller.EXTRA_STATUS_MESSAGE),
                     Toast.LENGTH_LONG).show();
         }
     }
@@ -120,7 +120,7 @@ public class Updater extends BroadcastReceiver {
 
     static InputStream open(String url) throws Exception {
         HttpURLConnection h = (HttpURLConnection) new URL(url).openConnection();
-        h.setRequestProperty("User-Agent", "FireFrame"); // GitHub's API requires one
+        h.setRequestProperty("User-Agent", "FireCasa"); // GitHub's API requires one
         h.setConnectTimeout(15000);
         h.setReadTimeout(30000);
         if (h.getResponseCode() != 200) throw new Exception("HTTP " + h.getResponseCode());

@@ -1,5 +1,5 @@
 #!/bin/sh
-# Builds out/fireframe.apk. No Gradle: just the Android SDK's own tools, so it builds in seconds.
+# Builds out/firecasa.apk. No Gradle: just the Android SDK's own tools, so it builds in seconds.
 # Needs Java 17 and the Android SDK (platform 34, build-tools 34):
 #   macOS:  brew install openjdk@17 && brew install --cask android-commandlinetools
 #           sdkmanager "platforms;android-34" "build-tools;34.0.0"
@@ -30,6 +30,6 @@ cp out/base.apk out/unsigned.apk; (cd out/dex && zip -q ../unsigned.apk classes.
 # A signing key is made on first build. Keep key.jks: updates must be signed with the same key.
 KS=${KEYSTORE:-key.jks}; PASS=${KEYSTORE_PASS:-fireframe}
 [ -f "$KS" ] || keytool -genkeypair -keystore "$KS" -storepass "$PASS" -keypass "$PASS" -alias fireframe \
-  -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=FireFrame" >/dev/null 2>&1
-"$BT/apksigner" sign --ks "$KS" --ks-pass "pass:$PASS" --out out/fireframe.apk out/aligned.apk
-echo "Built out/fireframe.apk ($(du -k out/fireframe.apk | cut -f1) KB)"
+  -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=FireCasa" >/dev/null 2>&1
+"$BT/apksigner" sign --ks "$KS" --ks-pass "pass:$PASS" --out out/firecasa.apk out/aligned.apk
+echo "Built out/firecasa.apk ($(du -k out/firecasa.apk | cut -f1) KB)"

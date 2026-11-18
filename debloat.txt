@@ -1,6 +1,6 @@
-# What ./fireframe.sh debloat turns off, by group. Lines are: group  package  # what it is
+# What ./firecasa.sh debloat turns off, by group. Lines are: group  package  # what it is
 # "safe" is always used. Add others with --also alexa,primevideo,... or --all.
-# Apps are disabled, never deleted: ./fireframe.sh undo turns them back on.
+# Apps are disabled, never deleted: ./firecasa.sh undo turns them back on.
 # Checked on a Fire TV Stick HD (AFTSS), Fire OS 7.7.1.4. Missing packages are skipped.
 #
 # Never listed, because Fire TV needs them: the Amazon launcher (Fire OS won't allow it anyway),
@@ -80,7 +80,7 @@ casting    com.amazon.cast.sink                     # Display Mirroring
 casting    com.amazon.awvflingreceiver              # Amazon's built-in cast receiver
 
 # Amazon's Live TV guide. It wakes channel apps (Tubi, Fubo, Netflix...) in the background to fill
-# a Live tab that FireFrame doesn't have. The apps themselves keep working.
+# a Live tab that FireCasa doesn't have. The apps themselves keep working.
 livetv     com.amazon.tv.livetv                     # Live TV guide
 
 # Automatic system updates. Fewer surprises, but no security fixes either.

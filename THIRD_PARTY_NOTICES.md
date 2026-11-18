@@ -1,12 +1,12 @@
 # Third-party notices
 
-FireFrame's own code is MIT licensed (see [LICENSE](LICENSE)). These bundled assets keep their own terms.
+FireCasa's own code is MIT licensed (see [LICENSE](LICENSE)). These bundled assets keep their own terms.
 
 | Asset | Source | License |
 | --- | --- | --- |
 | Inter Medium and SemiBold (`app/assets/fonts`) | [rsms/inter](https://github.com/rsms/inter) | SIL Open Font License 1.1, see `app/assets/fonts/Inter-LICENSE.txt` |
 | UI icons: image, grid_view, settings (`app/assets/ui`) | [Material Symbols](https://github.com/google/material-design-icons) | Apache License 2.0 |
-| App logos (`app/assets/logos`) | [Simple Icons](https://github.com/simple-icons/simple-icons) | CC0 1.0. The logos are trademarks of their owners and are used only to label their apps. FireFrame is not affiliated with any of them. |
+| App logos (`app/assets/logos`) | [Simple Icons](https://github.com/simple-icons/simple-icons) | CC0 1.0. The logos are trademarks of their owners and are used only to label their apps. FireCasa is not affiliated with any of them. |
 | Wallpapers (`app/assets/wallpapers`) | [NASA Image and Video Library](https://images.nasa.gov) | Public domain (NASA media guidelines) |
 
 Wallpaper sources:
@@ -19,9 +19,10 @@ Wallpaper sources:
 | southernlights.jpg | [iss067e133437](https://images.nasa.gov/details/iss067e133437) | Aurora over the South Pacific, ISS Expedition 67 |
 | sunrise.jpg | [iss040e080833](https://images.nasa.gov/details/iss040e080833) | Sunrise over Earth's limb, ISS Expedition 40 |
 
-NASA does not endorse FireFrame.
+NASA does not endorse FireCasa.
 
 Credits:
 
+- [FireFrame](https://github.com/dyascj/FireFrame) by [@dyascj](https://github.com/dyascj) (CJ Dyas) is where this project started. FireCasa's code still builds on it.
 - [CleanFrame](https://github.com/nthnclrk/CleanFrame) by [@nthnclrk](https://github.com/nthnclrk) inspired the look: a photo, the time and a glass dock.
 - [TV Detox](https://github.com/Ansub/tv-detox) by [@Ansub](https://github.com/Ansub) (MIT) inspired the build script and the agent-guided debloat approach.

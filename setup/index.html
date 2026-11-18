@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FireCasa setup</title>
+<style>
+  :root {
+    --bg: #f5f5f7; --card: #ffffff; --text: #1d1d1f; --muted: #6e6e73; --line: #d2d2d7;
+    --accent: #0a84ff; --accent-text: #ffffff; --good: #248a3d; --bad: #c9302c; --field: #fbfbfd;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #000000; --card: #1c1c1e; --text: #f5f5f7; --muted: #98989d; --line: #38383a;
+      --accent: #0a84ff; --accent-text: #ffffff; --good: #30d158; --bad: #ff453a; --field: #2c2c2e;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #000000; --card: #1c1c1e; --text: #f5f5f7; --muted: #98989d; --line: #38383a;
+    --accent: #0a84ff; --accent-text: #ffffff; --good: #30d158; --bad: #ff453a; --field: #2c2c2e;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font: 16px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, sans-serif;
+  }
+  main { max-width: 680px; margin: 0 auto; padding: 32px 16px 64px; }
+  h1 { font-size: 28px; margin: 0 0 4px; }
+  .lead { color: var(--muted); margin: 0 0 24px; }
+  .card {
+    background: var(--card); border: 1px solid var(--line); border-radius: 14px;
+    padding: 20px; margin-bottom: 16px;
+  }
+  .card h2 { font-size: 18px; margin: 0 0 4px; }
+  .card p { margin: 6px 0; }
+  .muted { color: var(--muted); font-size: 14px; }
+  label { display: block; font-weight: 600; margin: 14px 0 6px; }
+  input[type="text"] {
+    width: 100%; padding: 11px 12px; font: inherit; color: var(--text);
+    background: var(--field); border: 1px solid var(--line); border-radius: 10px;
+  }
+  input[type="text"]:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: 12px; }
+  button {
+    font: inherit; font-weight: 600; padding: 10px 16px; border-radius: 10px; cursor: pointer;
+    border: 1px solid var(--line); background: var(--field); color: var(--text);
+  }
+  button.primary { background: var(--accent); color: var(--accent-text); border-color: var(--accent); }
+  button.danger { color: var(--bad); }
+  button:disabled { opacity: 0.5; cursor: default; }
+  a { color: var(--accent); }
+  .status { display: flex; justify-content: space-between; gap: 12px; padding: 8px 0; border-top: 1px solid var(--line); }
+  .status:first-of-type { border-top: 0; }
+  .yes { color: var(--good); font-weight: 600; }
+  .no { color: var(--bad); font-weight: 600; }
+  .check { display: flex; gap: 12px; padding: 10px 0; border-top: 1px solid var(--line); cursor: pointer; }
+  .check:first-of-type { border-top: 0; }
+  .check input { margin-top: 4px; width: 18px; height: 18px; }
+  .check b { display: block; }
+  .always { color: var(--muted); font-size: 14px; padding: 4px 0 8px; }
+  code, pre { font-family: ui-monospace, Menlo, monospace; font-size: 13px; }
+  pre {
+    background: var(--field); border: 1px solid var(--line); border-radius: 10px; padding: 12px;
+    white-space: pre-wrap; word-break: break-word; max-height: 360px; overflow: auto; margin: 16px 0 0;
+  }
+  .saved { font-size: 14px; color: var(--good); font-weight: 600; margin-left: 4px; }
+  .notset { font-size: 14px; color: var(--muted); margin-left: 4px; }
+  .hidden { display: none; }
+  @media (max-width: 480px) { h1 { font-size: 24px; } .card { padding: 16px; } }
+</style>
+</head>
+<body>
+<main>
+  <h1>Set up FireCasa</h1>
+  <p class="lead">Fill in the boxes, then press the buttons. Everything runs on this computer.</p>
+
+  <section class="card">
+    <h2>1. Your Fire TV</h2>
+    <p class="muted">On the TV: Settings &gt; My Fire TV &gt; About &gt; Network shows its address. Then turn on
+      Developer Options &gt; ADB debugging.</p>
+    <label for="ip">Fire TV address</label>
+    <input id="ip" type="text" inputmode="numeric" placeholder="192.168.1.50" autocomplete="off">
+    <div class="row">
+      <button id="saveIp" class="primary">Save address</button>
+      <span id="ipMsg" class="muted"></span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>2. What this computer needs</h2>
+    <div id="tools"></div>
+    <p class="muted hidden" id="toolsHelp">FireCasa needs Android platform tools to talk to the TV. Download the zip from
+      <a href="https://developer.android.com/tools/releases/platform-tools" target="_blank" rel="noopener">developer.android.com</a>,
+      unzip it, and reload this page after putting its folder where you can find it.
+      Mac with Homebrew: <code>brew install --cask android-platform-tools</code> does the same.</p>
+    <p class="muted">Java and the Android SDK are only needed if you want to build your own copy. Otherwise FireCasa
+      downloads the ready-made app.</p>
+  </section>
+
+  <section class="card">
+    <h2>3. Keys for movie and show info</h2>
+    <p class="muted">These are optional. Without them, the matching rows and photos just don't show. Each one is free.
+      Paste it in and press Save, or leave a box blank to keep what is saved.</p>
+
+    <label for="tmdb">TMDB read access token <span id="s-tmdb" class="notset"></span></label>
+    <input id="tmdb" type="text" autocomplete="off" spellcheck="false" placeholder="Paste the token">
+    <p class="muted">Get one at <a href="https://www.themoviedb.org/settings/api" target="_blank" rel="noopener">themoviedb.org/settings/api</a>.
+      Copy the "API Read Access Token", the long one.</p>
+
+    <label for="omdb">OMDb key <span id="s-omdb" class="notset"></span></label>
+    <input id="omdb" type="text" autocomplete="off" spellcheck="false" placeholder="Paste the key">
+    <p class="muted">Get one at <a href="https://www.omdbapi.com/apikey.aspx" target="_blank" rel="noopener">omdbapi.com/apikey.aspx</a>.
+      Used for the IMDb and Rotten Tomatoes scores.</p>
+
+    <label for="unsplash">Unsplash access key <span id="s-unsplash" class="notset"></span></label>
+    <input id="unsplash" type="text" autocomplete="off" spellcheck="false" placeholder="Paste the key">
+    <p class="muted">Get one at <a href="https://unsplash.com/developers" target="_blank" rel="noopener">unsplash.com/developers</a>.
+      Gives the rotating background photos.</p>
+
+    <p class="muted">Keys are sent to your TV. They are never built into the app, so the app you install has none of yours in it.</p>
+    <div class="row">
+      <button id="saveKeys" class="primary">Save keys</button>
+      <button id="sendKeys">Send keys to TV</button>
+      <button id="clearKeys" class="danger">Remove all keys</button>
+      <span id="keysMsg" class="muted"></span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>4. Clean up Amazon's extras</h2>
+    <p class="muted">Turns off ads, tracking and background junk. Apps are switched off, never deleted, and you can undo it.</p>
+    <p class="always">Always included: ads, tracking, telemetry, shopping, News and demo mode.</p>
+    <div id="groups"></div>
+    <div class="row">
+      <button id="preview">Show what would change</button>
+      <button id="cleanup" class="primary">Clean up</button>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>5. Install FireCasa</h2>
+    <p class="muted">Puts FireCasa on the TV and sends it your keys. If this computer can't build the app, it downloads
+      the ready-made one. When you press this, look at the TV and choose <b>Always allow</b> if it asks.</p>
+    <div class="row">
+      <button id="install" class="primary">Install FireCasa</button>
+      <button id="memory">Check free memory</button>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Undo</h2>
+    <p class="muted">Turns Amazon's apps and home screen back on.</p>
+    <div class="row">
+      <button id="undo">Turn Amazon back on</button>
+      <button id="remove" class="danger">Remove FireCasa too</button>
+    </div>
+  </section>
+
+  <section class="card hidden" id="outputCard">
+    <h2 id="outputTitle">Output</h2>
+    <pre id="output"></pre>
+  </section>
+</main>
+
+<script>
+const GROUPS = {
+  alexa: ["Alexa", "Alexa and its media, calling and multi-room audio. You lose voice search on the mic button."],
+  primevideo: ["Prime Video", "The Prime Video app itself."],
+  livetv: ["Live TV guide", "Amazon's Live TV guide. Channel apps like Tubi and Fubo still work."],
+  amazonapps: ["Amazon Music, Photos and Silk", "Those three apps."],
+  casting: ["Screen mirroring", "Mirroring a phone or PC to the TV. Casting from Netflix and YouTube keeps working."],
+  updates: ["Forced updates", "Amazon's forced updater. Regular updates stay on."],
+};
+const TOOLS = {
+  adb: ["Android platform tools (adb)", "Talks to the TV. Required."],
+  java: ["Java 17", "Only to build your own copy."],
+  sdk: ["Android SDK 34", "Only to build your own copy."],
+};
+const OPTIONAL = ["java", "sdk"];
+const KEY_IDS = ["tmdb", "omdb", "unsplash"];
+const $ = (id) => document.getElementById(id);
+let busy = false;
+
+function setBusy(on) {
+  busy = on;
+  document.querySelectorAll("button").forEach((b) => (b.disabled = on));
+}
+
+async function api(path, body) {
+  const res = await fetch(path, body === undefined ? {} : {
+    method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || "Something went wrong.");
+  return data;
+}
+
+function selectedGroups() {
+  return [...document.querySelectorAll("#groups input:checked")].map((c) => c.value);
+}
+
+function showOutput(title, text) {
+  $("outputTitle").textContent = title;
+  $("output").textContent = text;
+  $("outputCard").classList.remove("hidden");
+  $("outputCard").scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+async function run(action, title, extra = {}) {
+  const ip = $("ip").value.trim();
+  if (!ip) { showOutput(title, "Fill in your Fire TV's address first (step 1)."); return; }
+  setBusy(true);
+  showOutput(title, "Working. This can take a minute or two. Keep this window open...");
+  try {
+    const result = await api("/api/run", { action, ip, groups: selectedGroups(), ...extra });
+    showOutput(result.ok ? title + ": done" : title + ": didn't finish", result.output);
+  } catch (e) {
+    showOutput(title, e.message);
+  } finally {
+    setBusy(false);
+    loadState();
+  }
+}
+
+function renderKeys(keys) {
+  KEY_IDS.forEach((id) => {
+    const saved = keys[id] && keys[id].set;
+    $("s-" + id).textContent = saved ? "saved" : "not set";
+    $("s-" + id).className = saved ? "saved" : "notset";
+  });
+}
+
+function renderTools(tools) {
+  const box = $("tools");
+  box.innerHTML = "";
+  let missing = false;
+  Object.entries(TOOLS).forEach(([key, [name, what]]) => {
+    const ok = !!tools[key];
+    if (!ok && !OPTIONAL.includes(key)) missing = true;
+    const row = document.createElement("div");
+    row.className = "status";
+    const left = document.createElement("span");
+    left.textContent = name + " ";
+    const sub = document.createElement("span");
+    sub.className = "muted";
+    sub.textContent = what;
+    left.appendChild(sub);
+    const right = document.createElement("span");
+    if (ok) { right.className = "yes"; right.textContent = "Found"; }
+    else if (OPTIONAL.includes(key)) { right.className = "muted"; right.textContent = "Not needed"; }
+    else { right.className = "no"; right.textContent = "Missing"; }
+    row.append(left, right);
+    box.appendChild(row);
+  });
+  $("toolsHelp").classList.toggle("hidden", !missing);
+}
+
+function renderGroups(groups) {
+  const box = $("groups");
+  box.innerHTML = "";
+  groups.forEach((g) => {
+    const info = GROUPS[g] || [g, ""];
+    const label = document.createElement("label");
+    label.className = "check";
+    const input = document.createElement("input");
+    input.type = "checkbox";
+    input.value = g;
+    input.checked = false; // the always-on group is listed above; these are opt-in, like --also in the terminal
+    const text = document.createElement("span");
+    const title = document.createElement("b");
+    title.textContent = info[0];
+    text.append(title, document.createTextNode(info[1]));
+    label.append(input, text);
+    box.appendChild(label);
+  });
+}
+
+async function loadState() {
+  try {
+    const s = await api("/api/state");
+    if (!$("ip").value) $("ip").value = s.ip || "";
+    renderKeys(s.keys);
+    renderTools(s.tools);
+    if (!$("groups").children.length) renderGroups(s.groups);
+  } catch (e) {
+    showOutput("Setup", "Can't reach the setup window. Leave it open and reload this page.");
+  }
+}
+
+$("saveIp").onclick = async () => {
+  const ip = $("ip").value.trim();
+  $("ipMsg").textContent = "";
+  if (!/^(\d{1,3}\.){3}\d{1,3}$/.test(ip)) { $("ipMsg").textContent = "That doesn't look like an address, like 192.168.1.50."; return; }
+  $("ipMsg").textContent = "Checking the TV...";
+  setBusy(true);
+  try {
+    const result = await api("/api/run", { action: "memory", ip, groups: [] });
+    $("ipMsg").textContent = result.ok ? "Connected. Saved." : "Saved, but couldn't reach the TV. Check the address and ADB debugging.";
+    if (!result.ok) showOutput("Connecting to the TV", result.output);
+  } catch (e) {
+    $("ipMsg").textContent = e.message;
+  } finally {
+    setBusy(false);
+  }
+};
+
+async function saveKeys(values, msgWhenDone) {
+  setBusy(true);
+  try {
+    const s = await api("/api/keys", values);
+    renderKeys(s.keys);
+    $("keysMsg").textContent = msgWhenDone;
+    KEY_IDS.forEach((id) => (($(id)).value = ""));
+  } catch (e) {
+    $("keysMsg").textContent = e.message;
+  } finally {
+    setBusy(false);
+  }
+}
+
+$("saveKeys").onclick = () => {
+  const values = {};
+  KEY_IDS.forEach((id) => { const v = $(id).value.trim(); if (v) values[id] = v; });
+  if (!Object.keys(values).length) { $("keysMsg").textContent = "Paste a key first, or leave the boxes blank to keep what's saved."; return; }
+  saveKeys(values, "Saved. Press Send keys to TV to update the TV.");
+};
+
+$("clearKeys").onclick = () => {
+  if (!confirm("Remove all three keys? The rows that use them will stop showing.")) return;
+  const values = {};
+  KEY_IDS.forEach((id) => (values[id] = ""));
+  saveKeys(values, "Removed. Press Send keys to TV to update the TV.");
+};
+
+$("sendKeys").onclick = () => run("keys", "Send keys to TV");
+
+$("preview").onclick = () => run("preview", "What would change");
+$("cleanup").onclick = () => {
+  if (!confirm("Turn off the selected Amazon apps? You can undo this from this page.")) return;
+  run("cleanup", "Clean up");
+};
+$("install").onclick = () => run("install", "Install FireCasa");
+$("memory").onclick = () => run("memory", "Free memory");
+$("undo").onclick = () => {
+  if (!confirm("Turn Amazon's apps and home screen back on?")) return;
+  run("undo", "Turn Amazon back on");
+};
+$("remove").onclick = () => {
+  if (!confirm("Remove FireCasa from the TV? The Home button goes back to Amazon's home screen.")) return;
+  run("remove", "Remove FireCasa");
+};
+
+loadState();
+</script>
+</body>
+</html>

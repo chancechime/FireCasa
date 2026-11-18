@@ -1,25 +1,26 @@
 #!/bin/sh
-# FireFrame: a clean home screen for Amazon Fire TV, installed over Wi-Fi with adb.
+# FireCasa: a clean home screen for Amazon Fire TV, installed over Wi-Fi with adb.
 #
-#   ./fireframe.sh install   <tv-ip>             build, install, take over the Home button, open it
-#   ./fireframe.sh debloat   <tv-ip> [--dry-run] turn off Amazon ads, tracking and junk ("safe" in debloat.txt)
-#   ./fireframe.sh debloat   <tv-ip> --also alexa,primevideo   also these groups from debloat.txt (or --all)
-#   ./fireframe.sh wallpaper <tv-ip> photo.jpg   use your own photo
-#   ./fireframe.sh undo      <tv-ip> [--uninstall] turn everything back on (and remove FireFrame)
-#   ./fireframe.sh memory    <tv-ip>             free memory right now
+#   ./firecasa.sh install   <tv-ip>             build, install, take over the Home button, open it
+#   ./firecasa.sh debloat   <tv-ip> [--dry-run] turn off Amazon ads, tracking and junk ("safe" in debloat.txt)
+#   ./firecasa.sh debloat   <tv-ip> --also alexa,primevideo   also these groups from debloat.txt (or --all)
+#   ./firecasa.sh wallpaper <tv-ip> photo.jpg   use your own photo
+#   ./firecasa.sh undo      <tv-ip> [--uninstall] turn everything back on (and remove FireCasa)
+#   ./firecasa.sh memory    <tv-ip>             free memory right now
+#   ./firecasa.sh keys      <tv-ip>             send the keys in setup/keys to the TV (install does this too)
 #
 # Nothing is ever deleted from the TV. Apps are disabled, and undo turns them back on.
 set -e
 cd "$(dirname "$0")"
 
 CMD=$1; IP=$2
-[ -n "$CMD" ] && [ -n "$IP" ] || { sed -n '3,9p' "$0" | sed 's/^# \{0,1\}//'; exit 1; }
+[ -n "$CMD" ] && [ -n "$IP" ] || { sed -n '3,10p' "$0" | sed 's/^# \{0,1\}//'; exit 1; }
 case "$IP" in *:*|emulator-*) ;; *) IP=$IP:5555 ;; esac
 
-PKG=com.fireframe.home
+PKG=com.firecasa.home
 SVC=$PKG/$PKG.HomeService
 LOG=disabled.txt # what debloat turned off, so undo can turn it back on (also kept on the TV)
-TVLOG=/data/local/tmp/fireframe-disabled.txt
+TVLOG=/data/local/tmp/firecasa-disabled.txt
 
 ADB=$(command -v adb || true)
 for a in /opt/homebrew/share/android-commandlinetools/platform-tools/adb "$HOME/Library/Android/sdk/platform-tools/adb"; do
@@ -67,22 +68,49 @@ home_off() {
   else tv settings delete secure enabled_accessibility_services >/dev/null; fi
 }
 
+# The API keys live in setup/keys (kept on this computer, never in the app). They're sent to the TV here,
+# and the app copies them in when it starts. A missing file means that key is off.
+KEYS_DIR=setup/keys
+TVKEYS=/data/local/tmp/firecasa-keys
+push_keys() {
+  tmp=$(mktemp -d)
+  for f in tmdb_token.txt omdb_key.txt unsplash_key.txt; do
+    if [ -f "$KEYS_DIR/$f" ]; then cp "$KEYS_DIR/$f" "$tmp/$f"; else : > "$tmp/$f"; fi
+    "$ADB" -s "$IP" push "$tmp/$f" "$TVKEYS/$f" >/dev/null
+  done
+  rm -rf "$tmp"
+  tv chmod 755 $TVKEYS; tv chmod 644 $TVKEYS/tmdb_token.txt $TVKEYS/omdb_key.txt $TVKEYS/unsplash_key.txt
+}
+start_with_keys() { # opens the app with the keys, then removes the copies from the TV's shared folder
+  tv rm -rf $TVKEYS; tv mkdir -p $TVKEYS
+  push_keys
+  tv am start -n $PKG/.MainActivity --es keys $TVKEYS >/dev/null 2>&1
+  sleep 2 # the app reads the files when it starts, before this removes them
+  tv rm -rf $TVKEYS
+}
+
 case "$CMD" in
 install)
   connect
-  [ -f out/fireframe.apk ] || ./build.sh
-  "$ADB" -s "$IP" install -r out/fireframe.apk
+  [ -f out/firecasa.apk ] || ./build.sh
+  "$ADB" -s "$IP" install -r out/firecasa.apk
   home_on
   if [ "$(tv getprop ro.build.version.sdk)" -ge 26 ]; then
-    tv appops set $PKG REQUEST_INSTALL_PACKAGES allow # so "Update" in FireFrame's settings can install updates
+    tv appops set $PKG REQUEST_INSTALL_PACKAGES allow # so "Update" in FireCasa's settings can install updates
   else
-    # Fire OS 6 never starts HomeService, so FireFrame watches for Home itself: see HomeWatcher.
+    # Fire OS 6 never starts HomeService, so FireCasa watches for Home itself: see HomeWatcher.
     tv pm grant $PKG android.permission.READ_LOGS
     tv appops set $PKG SYSTEM_ALERT_WINDOW allow
     tv am force-stop $PKG # READ_LOGS takes effect on the next start
   fi
-  tv am start -n $PKG/.MainActivity >/dev/null 2>&1
-  echo "FireFrame is on the TV. Press Home on the remote to check it comes back."
+  start_with_keys
+  echo "FireCasa is on the TV. Press Home on the remote to check it comes back."
+  ;;
+
+keys)
+  connect
+  start_with_keys
+  echo "Keys sent to the TV. Pictures and ratings update the next time FireCasa needs them."
   ;;
 
 debloat)
@@ -122,7 +150,7 @@ debloat)
   ;;
 
 wallpaper)
-  [ -f "$3" ] || { echo "usage: ./fireframe.sh wallpaper <tv-ip> photo.jpg" >&2; exit 1; }
+  [ -f "$3" ] || { echo "usage: ./firecasa.sh wallpaper <tv-ip> photo.jpg" >&2; exit 1; }
   connect
   tmp=$(mktemp -d)/wallpaper.jpg
   # Fire TV draws at 1920x1080: scale big photos down so they load fast and use little memory.
@@ -130,13 +158,13 @@ wallpaper)
   elif command -v sips >/dev/null; then cp "$3" "$tmp"; sips -Z 1920 "$tmp" >/dev/null
   else cp "$3" "$tmp"; fi
   # Since Android 11 adb can't write into the app's folder, so the app copies the photo in from here.
-  TVTMP=/data/local/tmp/fireframe-wallpaper.jpg
+  TVTMP=/data/local/tmp/firecasa-wallpaper.jpg
   "$ADB" -s "$IP" push "$tmp" $TVTMP >/dev/null
   tv chmod 644 $TVTMP
   tv am start -W -n $PKG/.MainActivity --es from $TVTMP --es wallpaper custom >/dev/null 2>&1
   sleep 1 # -W doesn't wait when the app is already in front
   tv rm -f $TVTMP
-  echo "Wallpaper set. The picture button on FireFrame switches between it and the built-in ones."
+  echo "Wallpaper set. The picture button on FireCasa switches between it and the built-in ones."
   ;;
 
 undo)
@@ -158,7 +186,7 @@ undo)
     tv am force-stop $PKG >/dev/null 2>&1
   fi
   echo "Home button goes to Amazon's home screen again."
-  if [ "$3" = --uninstall ]; then "$ADB" -s "$IP" uninstall $PKG >/dev/null && echo "FireFrame removed."; fi
+  if [ "$3" = --uninstall ]; then "$ADB" -s "$IP" uninstall $PKG >/dev/null && echo "FireCasa removed."; fi
   ;;
 
 memory) connect; memory ;;
